@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
-import com.example.projectakhir.Repository.KursusRepository
 import com.example.projectakhir.model.Kursus
+import com.example.projectakhir.repository.KursusRepository
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -30,12 +30,16 @@ class HomeKursusViewModel(private val kur: KursusRepository) : ViewModel() {
     fun getKur() {
         viewModelScope.launch {
             kurUiState = HomeKursusUiState.Loading
-            kurUiState = try {
-                HomeKursusUiState.Success(kur.getKursus())
+            try {
+                val data = kur.getKursus()
+                kurUiState = HomeKursusUiState.Success(data)
+                println("Data kursus berhasil diambil: $data")
             } catch (e: IOException) {
-                HomeKursusUiState.Error
+                println("Error IOException: ${e.message}")
+                kurUiState = HomeKursusUiState.Error
             } catch (e: HttpException) {
-                HomeKursusUiState.Error
+                println("Error HttpException: ${e.message}")
+                kurUiState = HomeKursusUiState.Error
             }
         }
     }
@@ -45,10 +49,11 @@ class HomeKursusViewModel(private val kur: KursusRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 kur.deleteKursus(id_kursus)
+                getKur()
             } catch (e: IOException) {
-                HomeKursusUiState.Error
+                kurUiState = HomeKursusUiState.Error
             } catch (e: HttpException) {
-                HomeKursusUiState.Error
+                kurUiState = HomeKursusUiState.Error
             }
         }
     }
