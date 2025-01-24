@@ -76,4 +76,6 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
+
+    implementation("androidx.compose.compiler:compiler:1.5.3")
 }
