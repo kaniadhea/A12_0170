@@ -11,18 +11,18 @@ import com.example.projectakhir.model.Instruktur
 import kotlinx.coroutines.launch
 
 
-class InsertViewModel(private val instru: InstrukturRepository): ViewModel() {
-    var uiState by mutableStateOf(InsertUiState())
+class InsertInstrukturViewModel(private val instru: InstrukturRepository): ViewModel() {
+    var InstruuiState by mutableStateOf(InsertInstrukturUiState())
         private set
 
-    fun updateInsertInstruState(insertUiEvent: InsertUiEvent){
-        uiState = InsertUiState(insertUiEvent = insertUiEvent)
+    fun updateInsertInstrukturState(insertUiEvent: InsertInstrukturUiEvent){
+        InstruuiState = InsertInstrukturUiState(insertInstrukturUiEvent = insertUiEvent)
     }
 
-    suspend fun insertInstruktur() {
+    suspend fun insertInst() {
         viewModelScope.launch {
             try {
-                instru.insertInstruktur(uiState.insertUiEvent.toInstru())
+                instru.insertInstruktur(InstruuiState.insertInstrukturUiEvent.toInstru())
             }catch (e:Exception){
                 e.printStackTrace()
             }
@@ -31,11 +31,11 @@ class InsertViewModel(private val instru: InstrukturRepository): ViewModel() {
 }
 
 
-data class InsertUiState(
-    val insertUiEvent: InsertUiEvent = InsertUiEvent()
+data class InsertInstrukturUiState(
+    val insertInstrukturUiEvent: InsertInstrukturUiEvent = InsertInstrukturUiEvent()
 )
 
-data class InsertUiEvent (
+data class InsertInstrukturUiEvent (
     val id_instruktur: String="",
     val nama_instruktur: String="",
     val email: String="",
@@ -43,7 +43,7 @@ data class InsertUiEvent (
     val deskripsi:String=""
 )
 
-fun InsertUiEvent.toInstru(): Instruktur = Instruktur(
+fun InsertInstrukturUiEvent.toInstru(): Instruktur = Instruktur(
     id_instruktur = id_instruktur,
     nama_instruktur = nama_instruktur,
     email = email,
@@ -51,11 +51,11 @@ fun InsertUiEvent.toInstru(): Instruktur = Instruktur(
     deskripsi = deskripsi
 )
 
-fun Instruktur.toUiStateInstru(): InsertUiState = InsertUiState(
-    insertUiEvent = toInsertUiEvent()
+fun Instruktur.toUiStateInstru(): InsertInstrukturUiState = InsertInstrukturUiState(
+    insertInstrukturUiEvent = toInsertInstrukturUiEvent()
 )
 
-fun Instruktur.toInsertUiEvent(): InsertUiEvent = InsertUiEvent(
+fun Instruktur.toInsertInstrukturUiEvent(): InsertInstrukturUiEvent = InsertInstrukturUiEvent(
     id_instruktur = id_instruktur,
     nama_instruktur = nama_instruktur,
     email = email,

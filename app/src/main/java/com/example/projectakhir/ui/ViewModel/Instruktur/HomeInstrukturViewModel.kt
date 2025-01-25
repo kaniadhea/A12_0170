@@ -11,31 +11,31 @@ import com.example.projectakhir.model.Instruktur
 import kotlinx.coroutines.launch
 import okio.IOException
 
-sealed class HomeUiState {
-    data class Success(val instruktur: List<Instruktur>) : HomeUiState()
-    object Error : HomeUiState()
-    object Loading : HomeUiState()
+sealed class HomeInstrukturUiState {
+    data class Success(val instruktur: List<Instruktur>) : HomeInstrukturUiState()
+    object Error : HomeInstrukturUiState()
+    object Loading : HomeInstrukturUiState()
 }
 
-class HomeViewModel(private val instru: InstrukturRepository) : ViewModel() {
-    var mhsUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
+class HomeInstrukturViewModel(private val instru: InstrukturRepository) : ViewModel() {
+    var instruUiState: HomeInstrukturUiState by mutableStateOf(HomeInstrukturUiState.Loading)
         private set
 
 
     init {
-        getMhs()
+        getIntru()
     }
 
 
-    fun getMhs() {
+    fun getIntru() {
         viewModelScope.launch {
-            mhsUiState = HomeUiState.Loading
-            mhsUiState = try {
-                HomeUiState.Success(instru.getInstruktur())
+            instruUiState = HomeInstrukturUiState.Loading
+            instruUiState = try {
+                HomeInstrukturUiState.Success(instru.getInstruktur())
             } catch (e: IOException) {
-                HomeUiState.Error
+                HomeInstrukturUiState.Error
             } catch (e: HttpException) {
-                HomeUiState.Error
+                HomeInstrukturUiState.Error
             }
         }
     }
@@ -45,9 +45,9 @@ class HomeViewModel(private val instru: InstrukturRepository) : ViewModel() {
             try {
                 instru.deleteInstruktur(id_instruktur)
             } catch (e: IOException) {
-                HomeUiState.Error
+                HomeInstrukturUiState.Error
             } catch (e: HttpException) {
-                HomeUiState.Error
+                HomeInstrukturUiState.Error
             }
         }
     }
