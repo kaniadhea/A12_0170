@@ -1,57 +1,61 @@
-package com.example.projectakhir.ui.ViewModel.Pendaftaran
+package com.example.pam11.ui.ViewModel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.network.HttpException
 import com.example.projectakhir.Repository.PendaftaranRepository
 import com.example.projectakhir.model.Pendaftaran
+import com.example.projectakhir.ui.View.Pendaftaran.DestinasiDetailPendaftran
+import com.example.projectakhir.ui.ViewModel.Pendaftaran.InsertPendaftranUiEvent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okio.IOException
 
-sealed class HomePendaftaranUiState {
-    data class Success(val pendaftaran: List<Pendaftaran>) : HomePendaftaranUiState()
-    object Error : HomePendaftaranUiState()
-    object Loading : HomePendaftaranUiState()
+sealed class DetailPendaftaranUiState {
+    data class Success(val pendaftaran: Pendaftaran) : DetailPendaftaranUiState()
+    object Error : DetailPendaftaranUiState()
+    object Loading : DetailPendaftaranUiState()
 }
 
-class HomePendaftaranViewModel(private val pen: PendaftaranRepository) : ViewModel() {
-    var penUiState: HomePendaftaranUiState by mutableStateOf(HomePendaftaranUiState.Loading)
-        private set
+class DetailPendaftaranViewModel(
+    savedStateHandle: SavedStateHandle,
+    private val pndftrn: PendaftaranRepository
+) : ViewModel() {
 
+    private val _id_pendaftaran: String = checkNotNull(savedStateHandle[DestinasiDetailPendaftran.ID_Pendaftaran])
+
+
+    private val _detailPendaftaranUiState = MutableStateFlow<DetailPendaftaranUiState>(DetailPendaftaranUiState.Loading)
+    val detailPndftrnUiState: StateFlow<DetailPendaftaranUiState> = _detailPendaftaranUiState
 
     init {
-        getPen()
+        getDetailPndftrn()
     }
 
-
-    fun getPen() {
-        viewModelScope.launch {
-            penUiState = HomePendaftaranUiState.Loading
-            penUiState = try {
-                HomePendaftaranUiState.Success(pen.getPendaftaran())
-            } catch (e: IOException) {
-                HomePendaftaranUiState.Error
-            } catch (e: HttpException) {
-                HomePendaftaranUiState.Error
-            }
-        }
-    }
-
-
-    fun deletePen(id_pendaftaran: String) {
+    fun getDetailPndftrn() {
         viewModelScope.launch {
             try {
-                pen.deletePendaftaran(id_pendaftaran)
-            } catch (e: IOException) {
-                HomePendaftaranUiState.Error
-            } catch (e: HttpException) {
-                HomePendaftaranUiState.Error
+                _detailPendaftaranUiState.value = DetailPendaftaranUiState.Loading
+                val pendaftaran = pndftrn.getPendaftaranbyid_pendaftaran(_id_pendaftaran)
+
+                if (pendaftaran != null) {
+                    _detailPendaftaranUiState.value = DetailPendaftaranUiState.Success(pendaftaran)
+                } else {
+                    _detailPendaftaranUiState.value = DetailPendaftaranUiState.Error
+                }
+            } catch (e: Exception) {
+                _detailPendaftaranUiState.value = DetailPendaftaranUiState.Error
             }
         }
     }
 }
 
 
+fun Pendaftaran.toDetailPndftrnUiEvent(): InsertPendaftranUiEvent {
+    return InsertPendaftranUiEvent(
+        id_pendaftaran = id_pendaftaran,
+        id_kursus = id_kursus,
+        id_siswa = id_siswa,
+        tanggal_pendaftaran = tanggal_pendaftaran
+    )
+}
