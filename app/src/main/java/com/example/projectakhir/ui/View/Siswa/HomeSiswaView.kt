@@ -87,7 +87,7 @@ fun HomeScreenSiswa(
             homeSiswaUiState = viewModel.swaUiState,
             retryAction = {viewModel.getSwa()}, modifier = Modifier.padding(innerPadding),
             onDetailClick = onDetailClick,onDeleteClick = {
-                viewModel.deleteMhs(it.id_siswa)
+                viewModel.deleteSwa(it.id_siswa)
                 viewModel.getSwa()
             }
         )
@@ -108,22 +108,23 @@ fun HomeStatusSiswa(
         is HomeSiswaUiState.Loading-> OnLoading(modifier = modifier.fillMaxSize())
 
 
-        is HomeSiswaUiState.Success ->
+        is HomeSiswaUiState.Success -> {
             if(homeSiswaUiState.siswa.isEmpty()){
                 return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center){
                     Text(text = "Tidak ada data kontak")
                 }
-            }else{
+            } else {
                 SwaLayout(
                     siswa = homeSiswaUiState.siswa,modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
-                        onDetailClick(it.id_siswa)
+                        onDetailClick(it.id_siswa.toString()) // Convert id_siswa to String
                     },
                     onDeleteClick={
                         onDeleteClick(it)
                     }
                 )
             }
+        }
         is HomeSiswaUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
     }
 }
@@ -179,8 +180,6 @@ fun SwaLayout(
                     onDeleteClick(siswa)
                 }
             )
-
-
         }
 
     }
@@ -219,11 +218,10 @@ fun SwaCard(
 
 
                 Text(
-                    text = siswa.id_siswa,
+                    text = siswa.id_siswa.toString(), // Convert id_siswa to String
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-
 
             Text(
                 text = siswa.email,
@@ -234,6 +232,5 @@ fun SwaCard(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
     }
 }

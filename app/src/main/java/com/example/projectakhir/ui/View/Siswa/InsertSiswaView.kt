@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 object DestinasiEntrySiswa : DestinasiNavigasi {
     override val route = "item_entry"
-    override val titleRes = "Entry Mhs"
+    override val titleRes = "Tambah Siswa"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,12 +56,12 @@ fun EntrySwaScreen(
             )
         }
     ) { innerPadding ->
-        EntryBody(
-            insertSiswaUiState = viewModel.uiState,
+        EntryBodySiswa(
+            insertSiswaUiState = viewModel.SiswauiState,
             onSiswaValueChange = viewModel::updateInsertSwaState,
             onSaveClick = {
                 coroutineScope.launch {
-                    viewModel.insertMhs()
+                    viewModel.insertSwa()
                     navigateBack()
                 }
             },
@@ -74,7 +74,7 @@ fun EntrySwaScreen(
 }
 
 @Composable
-fun EntryBody(
+fun EntryBodySiswa(
     insertSiswaUiState: InsertSiswaUiState,
     onSiswaValueChange:(InsertSiswaUiEvent)->Unit,
     onSaveClick:()-> Unit,
@@ -101,71 +101,68 @@ fun EntryBody(
 }
 
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun FormInputSiswa(
     insertSiswaUiEvent: InsertSiswaUiEvent,
     modifier: Modifier = Modifier,
-    onValueChange:(InsertSiswaUiEvent)->Unit = {},
+    onValueChange: (InsertSiswaUiEvent) -> Unit = {},
     enabled: Boolean = true
-){
-    Column (
+) {
+    Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
             value = insertSiswaUiEvent.nama_siswa,
-            onValueChange = {onValueChange(insertSiswaUiEvent.copy(nama_siswa = it))},
-            label = { Text("Nama") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-        OutlinedTextField(
-            value = insertSiswaUiEvent.id_siswa,
-            onValueChange = {onValueChange(insertSiswaUiEvent.copy(id_siswa = it))},
-            label = { Text("NIM") },
+            onValueChange = { onValueChange(insertSiswaUiEvent.copy(nama_siswa = it)) },
+            label = { Text("Nama Siswa") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
+        // Ubah id_siswa menjadi Int, menggunakan toString() untuk input
+        OutlinedTextField(
+            value = insertSiswaUiEvent.id_siswa.toString(),  // Convert to String for TextField
+            onValueChange = {
+                // Convert kembali ke Int saat nilai diubah
+                onValueChange(insertSiswaUiEvent.copy(id_siswa = it.toIntOrNull() ?: 0))
+            },
+            label = { Text("ID Siswa") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
 
         OutlinedTextField(
             value = insertSiswaUiEvent.email,
-            onValueChange = {onValueChange(insertSiswaUiEvent.copy(email = it))},
-            label = { Text("Jenis Kelamin") },
+            onValueChange = { onValueChange(insertSiswaUiEvent.copy(email = it)) },
+            label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
-
 
         OutlinedTextField(
             value = insertSiswaUiEvent.nomor_telepon,
-            onValueChange = {onValueChange(insertSiswaUiEvent.copy(nomor_telepon = it))},
-            label = { Text("Alamat") },
+            onValueChange = { onValueChange(insertSiswaUiEvent.copy(nomor_telepon = it)) },
+            label = { Text("Nomor Telepon") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
-        if (enabled){
+        if (enabled) {
             Text(
                 text = "Isi Semua Data!",
                 modifier = Modifier.padding(12.dp)
             )
         }
 
-
         Divider(
             thickness = 8.dp,
             modifier = Modifier.padding(12.dp)
         )
-
-
     }
-
 }
+

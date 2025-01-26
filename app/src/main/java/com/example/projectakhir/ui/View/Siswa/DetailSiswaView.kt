@@ -42,11 +42,11 @@ object DestinasiDetailSiswa : DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailViewSiswa(
-    id_siswa: String,
+fun DetailSiswaView(
+    id_siswa: Int,  // Pastikan id_siswa bertipe Int
     modifier: Modifier = Modifier,
     viewModel: DetailSiswaViewModel = viewModel(factory = PenyediaViewModel.Factory),
-    onEditClick: (String) -> Unit = {},
+    onEditClick: (Int) -> Unit = {},  // Ubah tipe parameter menjadi Int
     navigateBack:()->Unit,
 ){
     Scaffold(
@@ -60,7 +60,7 @@ fun DetailViewSiswa(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onEditClick(id_siswa) },
+                onClick = { onEditClick(id_siswa) },  // id_siswa dikirimkan sebagai Int
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(16.dp)
             ) {
@@ -80,6 +80,7 @@ fun DetailViewSiswa(
         )
     }
 }
+
 
 
 @Composable
@@ -126,17 +127,17 @@ fun ItemDetailSiswa(
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            ComponentDetail(judul = "ID Siswa", isinya = siswa.id_siswa)
+            ComponentDetail(judul = "ID Siswa", isinya = siswa.id_siswa.toString())  // Mengubah id_siswa ke String
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetail(judul = "Nama", isinya = siswa.nama_siswa)
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetail(judul = "Email", isinya = siswa.email)
             Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetail(judul = "nomor telepon", isinya = siswa.nomor_telepon)
-
+            ComponentDetail(judul = "Nomor Telepon", isinya = siswa.nomor_telepon)
         }
     }
 }
+
 
 
 

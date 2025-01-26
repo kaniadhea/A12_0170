@@ -31,7 +31,7 @@ class HomeSiswaViewModel(private val swa: SiswaRepository) : ViewModel() {
         viewModelScope.launch {
             swaUiState = HomeSiswaUiState.Loading
             swaUiState = try {
-                HomeSiswaUiState.Success(swa.getSiswa())
+                HomeSiswaUiState.Success(swa.getAllSiswa().data)
             } catch (e: IOException) {
                 HomeSiswaUiState.Error
             } catch (e: HttpException) {
@@ -41,10 +41,10 @@ class HomeSiswaViewModel(private val swa: SiswaRepository) : ViewModel() {
     }
 
 
-    fun deleteMhs(nim: String) {
+    fun deleteSwa(id_siswa: Int) {
         viewModelScope.launch {
             try {
-                swa.deleteSiswa(nim)
+                swa.deleteSiswa(id_siswa)
             } catch (e: IOException) {
                 HomeSiswaUiState.Error
             } catch (e: HttpException) {

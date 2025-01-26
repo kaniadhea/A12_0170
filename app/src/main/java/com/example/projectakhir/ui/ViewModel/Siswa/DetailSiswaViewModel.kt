@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projectakhir.Repository.SiswaRepository
 import com.example.projectakhir.model.Siswa
+import com.example.projectakhir.ui.View.Siswa.DestinasiDetailSiswa
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,12 +16,12 @@ sealed class DetailSiswaUiState {
     object Loading : DetailSiswaUiState()
 }
 
-class DetailViewModel(
+class DetailSiswaViewModel(
     savedStateHandle: SavedStateHandle,
     private val swa: SiswaRepository
 ) : ViewModel() {
 
-    private val _id_siswa : String = checkNotNull(savedStateHandle[DestinasiDetail.NIM])
+    private val _id_siswa : Int = checkNotNull(savedStateHandle[DestinasiDetailSiswa.ID_Siswa])
 
 
     private val _detailSiswaUiState = MutableStateFlow<DetailSiswaUiState>(DetailSiswaUiState.Loading)

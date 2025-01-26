@@ -33,7 +33,7 @@ fun UpdateSiswaView(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateSiswaViewModel = viewModel(factory = PenyediaViewModel.Factory)
-){
+) {
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val uiState = viewModel.uiState.value
@@ -48,7 +48,7 @@ fun UpdateSiswaView(
                 navigateUp = navigateBack
             )
         }
-    ){ padding ->
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,7 +56,7 @@ fun UpdateSiswaView(
                 .padding(16.dp)
         ) {
             // Pass the UI state to the EntryBody
-            EntryBody(
+            EntryBodySiswa(
                 insertSiswaUiState = uiState,
                 onSiswaValueChange = { updatedValue ->
                     viewModel.updateSwaState(updatedValue) // Update ViewModel state
@@ -65,7 +65,7 @@ fun UpdateSiswaView(
                     uiState.insertSiswaUiEvent?.let { insertUiEvent ->
                         coroutineScope.launch {
                             viewModel.updateSwa(
-                                id_siswa = viewModel.id_siswa,
+                                id_siswa = viewModel.id_siswa.toString(), // Convert id_siswa to String
                                 siswa = insertUiEvent.toSwa()
                             )
                             navigateBack() // Navigate back after saving
@@ -76,3 +76,4 @@ fun UpdateSiswaView(
         }
     }
 }
+
