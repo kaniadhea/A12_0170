@@ -37,27 +37,26 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir.R
 import com.example.projectakhir.model.Pendaftaran
+import com.example.projectakhir.ui.View.Instruktur.DestinasiHomeInstruktur
 import com.example.projectakhir.ui.ViewModel.Pendaftaran.HomePendaftaranUiState
 import com.example.projectakhir.ui.ViewModel.Pendaftaran.HomePendaftaranViewModel
-import com.example.projectakhir.ui.ViewModel.Pendaftaran.HomePndftrnUiState
+
 import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
 import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 
-object DestinasiHome: DestinasiNavigasi {
+object DestinasiHomePendaftaran: DestinasiNavigasi {
     override val route ="home"
     override val titleRes = "Home Mhs"
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePendftaranScreen(
     navigateTolItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
-    onDetailClick: (String) -> Unit = {},
+    onDetailClick: (Int) -> Unit = {},  // Ganti parameter jadi Int
     viewModel: HomePendaftaranViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -65,7 +64,7 @@ fun HomePendftaranScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiHome.titleRes,
+                title = DestinasiHomePendaftaran.titleRes,
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
@@ -82,18 +81,20 @@ fun HomePendftaranScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Mahasiswa")
             }
         },
-    ) { innerPadding->
+    ) { innerPadding ->
         HomePndftrnStatus(
             homePendaftaranUiState = viewModel.pdftnUiState,
-            retryAction = {viewModel.getpndftrn()}, modifier = Modifier.padding(innerPadding),
-            onDetailClick = onDetailClick,onDeleteClick = {
+            retryAction = { viewModel.getpndftrn() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,  // onDetailClick menerima Int
+            onDeleteClick = {
                 viewModel.deletePndftrn(it.id_pendaftaran)
                 viewModel.getpndftrn()
             }
         )
     }
-
 }
+
 
 
 @Composable
@@ -102,7 +103,7 @@ fun HomePndftrnStatus(
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     onDeleteClick: (Pendaftaran) -> Unit = {},
-    onDetailClick: (String) -> Unit
+    onDetailClick: (Int) -> Unit
 ){
     when (homePendaftaranUiState){
         is HomePendaftaranUiState.Loading-> OnLoading(modifier = modifier.fillMaxSize())
@@ -190,8 +191,8 @@ fun PndftrnLayout(
 fun PndftrnCard(
     pendaftaran: Pendaftaran,
     modifier: Modifier = Modifier,
-    onDeleteClick:(Pendaftaran)-> Unit = {}
-){
+    onDeleteClick: (Pendaftaran) -> Unit = {}
+) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -205,28 +206,27 @@ fun PndftrnCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Convert id_pendaftaran, id_siswa, id_kursus from Int to String
                 Text(
-                    text = pendaftaran.id_pendaftaran,
+                    text = pendaftaran.id_pendaftaran.toString(),  // Convert to String
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = {onDeleteClick(pendaftaran)}) {
+                IconButton(onClick = { onDeleteClick(pendaftaran) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
                     )
                 }
 
-
                 Text(
-                    text = pendaftaran.id_siswa,
+                    text = pendaftaran.id_siswa.toString(),  // Convert to String
                     style = MaterialTheme.typography.titleMedium
                 )
             }
 
-
             Text(
-                text = pendaftaran.id_kursus,
+                text = pendaftaran.id_kursus.toString(),  // Convert to String
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
@@ -234,6 +234,5 @@ fun PndftrnCard(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
     }
 }

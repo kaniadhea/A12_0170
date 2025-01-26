@@ -1,17 +1,15 @@
 package com.example.projectakhir.ui.View.Pendaftaran
 
 import com.example.projectakhir.ui.ViewModel.Pendaftaran.UpdatePendaftaranViewModel
+import com.example.projectakhir.ui.ViewModel.Pendaftaran.toPndftran
 import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
+import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
-
-package com.example.pam11.ui.view
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -21,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
-object DestinasiUpdatePndftrn : DestinasiNavigasi {
+object DestinasiUpdatePendaftaran : DestinasiNavigasi {
     override val route = "update"
     const val ID_Pendaftaran = "nim"
     val routesWithArg = "$route/{$ID_Pendaftaran}"
@@ -30,11 +28,11 @@ object DestinasiUpdatePndftrn : DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdatePendaftranView(
+fun UpdatePendfatranView(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdatePendaftaranViewModel = viewModel(factory = PenyediaViewModel.Factory)
-){
+) {
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val uiState = viewModel.uiState.value
@@ -43,13 +41,13 @@ fun UpdatePendaftranView(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiUpdatePndftrn.titleRes,
+                title = DestinasiUpdatePendaftaran.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 navigateUp = navigateBack
             )
         }
-    ){ padding ->
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -57,17 +55,19 @@ fun UpdatePendaftranView(
                 .padding(16.dp)
         ) {
             // Pass the UI state to the EntryBody
-            EntryBodyPn(
-                insertUiState = uiState,
+            EntryBodyPndftrn(
+                insertPendaftaranUiState = uiState,
                 onSiswaValueChange = { updatedValue ->
-                    viewModel.updateMhsState(updatedValue) // Update ViewModel state
+                    viewModel.updatePndftrnState(updatedValue) // Update ViewModel state
                 },
                 onSaveClick = {
-                    uiState.insertUiEvent?.let { insertUiEvent ->
+                    uiState.insertPendftaranUiEvent?.let { insertPndftrnEvent ->
                         coroutineScope.launch {
-                            viewModel.updateMhs(
-                                nim = viewModel.nim,
-                                mahasiswa = insertUiEvent.toMhs()
+                            // Pass the ID as Int for the update
+                            val idPendaftaran = uiState.insertPendftaranUiEvent?.id_pendaftaran ?: 0
+                            viewModel.updatePndftrn(
+                                id_pendaftaran = idPendaftaran,  // ID should be passed as Int
+                                pendaftaran = insertPndftrnEvent.toPndftran()
                             )
                             navigateBack() // Navigate back after saving
                         }

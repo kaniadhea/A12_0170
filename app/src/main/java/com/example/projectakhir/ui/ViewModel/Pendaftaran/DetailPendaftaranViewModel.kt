@@ -1,4 +1,4 @@
-package com.example.pam11.ui.ViewModel
+package com.example.projectakhir.ui.ViewModel.Pendaftaran
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -22,7 +22,7 @@ class DetailPendaftaranViewModel(
     private val pndftrn: PendaftaranRepository
 ) : ViewModel() {
 
-    private val _id_pendaftaran: String = checkNotNull(savedStateHandle[DestinasiDetailPendaftran.ID_Pendaftaran])
+    private val _id_pendaftaran: Int = checkNotNull(savedStateHandle[DestinasiDetailPendaftran.ID_Pendaftaran])
 
 
     private val _detailPendaftaranUiState = MutableStateFlow<DetailPendaftaranUiState>(DetailPendaftaranUiState.Loading)

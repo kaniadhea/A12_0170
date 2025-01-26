@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
 import com.example.projectakhir.Repository.PendaftaranRepository
 import com.example.projectakhir.model.Pendaftaran
+import com.example.projectakhir.ui.ViewModel.Siswa.HomeSiswaUiState
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -31,27 +32,32 @@ class HomePendaftaranViewModel(private val pndftn: PendaftaranRepository) : View
         viewModelScope.launch {
             pdftnUiState = HomePendaftaranUiState.Loading
             pdftnUiState = try {
-                HomePendaftaranUiState.Success(pndftn.getPendaftaran())
+                HomePendaftaranUiState.Success(pndftn.getAllPendaftaran().data)
             } catch (e: IOException) {
+                e.printStackTrace() // Log error ke console
                 HomePendaftaranUiState.Error
             } catch (e: HttpException) {
+                e.printStackTrace() // Log error ke console
                 HomePendaftaranUiState.Error
             }
         }
     }
 
 
-    fun deletePndftrn(id_pendaftaran: String) {
+
+    fun deletePndftrn(id_pendaftaran: Int) {
         viewModelScope.launch {
             try {
+                // Pastikan parameter id_pendaftaran yang dikirim sesuai dengan tipe data yang diharapkan di repository
                 pndftn.deletePendaftaran(id_pendaftaran)
             } catch (e: IOException) {
-                HomePendaftaranUiState.Error
+                pdftnUiState = HomePendaftaranUiState.Error
             } catch (e: HttpException) {
-                HomePendaftaranUiState.Error
+                pdftnUiState = HomePendaftaranUiState.Error
             }
         }
     }
+
 }
 
 

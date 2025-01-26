@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.KeyEventDispatcher.Component
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pam11.ui.ViewModel.DetailPendaftaranUiState
-import com.example.pam11.ui.ViewModel.DetailPendaftaranViewModel
 import com.example.projectakhir.model.Pendaftaran
+import com.example.projectakhir.ui.ViewModel.Pendaftaran.DetailPendaftaranUiState
+import com.example.projectakhir.ui.ViewModel.Pendaftaran.DetailPendaftaranViewModel
 import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
 import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
@@ -44,10 +44,10 @@ object DestinasiDetailPendaftran : DestinasiNavigasi {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailPendaftaranView(
-    id_pendaftaran: String,
+    id_pendaftaran: Int,
     modifier: Modifier = Modifier,
     viewModel: DetailPendaftaranViewModel = viewModel(factory = PenyediaViewModel.Factory),
-    onEditClick: (String) -> Unit = {},
+    onEditClick: (Int) -> Unit = {},
     navigateBack:()->Unit,
 ){
     Scaffold(
@@ -99,7 +99,7 @@ fun BodyDetail(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                ItemDetail(pendaftaran = detailPendaftaranUiState.pendaftaran)
+                ItemDetailPendaftaran(pendaftaran = detailPendaftaranUiState.pendaftaran)
             }
         }
         is DetailPendaftaranUiState.Error -> {
@@ -116,7 +116,7 @@ fun BodyDetail(
 }
 
 @Composable
-fun ItemDetail(
+fun ItemDetailPendaftaran(
     pendaftaran: Pendaftaran
 ){
     Card(
@@ -127,11 +127,12 @@ fun ItemDetail(
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            ComponentDetail(judul = "ID_pendaftaran", isinya = pendaftaran.id_pendaftaran)
+            // Konversi ID_pendaftaran, ID_siswa, ID_kursus menjadi String sebelum dikirimkan ke ComponentDetail
+            ComponentDetail(judul = "ID_pendaftaran", isinya = pendaftaran.id_pendaftaran.toString())
             Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetail(judul = "ID_Siswa", isinya = pendaftaran.id_siswa)
+            ComponentDetail(judul = "ID_Siswa", isinya = pendaftaran.id_siswa.toString())
             Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetail(judul = "ID_Kursus", isinya = pendaftaran.id_kursus)
+            ComponentDetail(judul = "ID_Kursus", isinya = pendaftaran.id_kursus.toString())
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetail(judul = "Tanggal Pendaftaran", isinya = pendaftaran.tanggal_pendaftaran)
             Spacer(modifier = Modifier.padding(4.dp))
