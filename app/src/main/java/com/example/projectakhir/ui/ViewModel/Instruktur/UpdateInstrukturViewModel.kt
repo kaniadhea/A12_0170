@@ -4,9 +4,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pam11.ui.ViewModel.InsertInstrukturUiEvent
-import com.example.pam11.ui.ViewModel.InsertInstrukturUiState
-import com.example.pam11.ui.ViewModel.toInsertInstrukturUiEvent
 import com.example.projectakhir.Repository.InstrukturRepository
 import com.example.projectakhir.model.Instruktur
 import com.example.projectakhir.ui.View.Kursus.DestinasiDetailKursus

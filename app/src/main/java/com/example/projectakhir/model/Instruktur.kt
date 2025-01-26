@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class AllInstrukturResponse (
+data class AllInstrukturRespons (
     val status: Boolean,
     val message: String,
     val data: List<Instruktur>
@@ -20,7 +20,7 @@ data class InstrukturDetailRespons (
 
 @Serializable
 data class Instruktur (
-    val id_instruktur: String,
+    val id_instruktur: Int = 0,
     val nama_instruktur: String,
     val email: String,
     val nomor_telepon: String,

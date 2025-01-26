@@ -57,7 +57,7 @@ object DestinasiHomeInstruktur: DestinasiNavigasi {
 fun HomeScreenInstruktur(
     navigateTolItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
-    onDetailClick: (String) -> Unit = {},
+    onDetailClick: (Int) -> Unit = {},
     viewModel: HomeInstrukturViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -102,7 +102,7 @@ fun HomeStatusInstruktur(
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     onDeleteClick: (Instruktur) -> Unit = {},
-    onDetailClick: (String) -> Unit
+    onDetailClick: (Int) -> Unit
 ){
     when (homeUiState){
         is HomeInstrukturUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
@@ -117,7 +117,7 @@ fun HomeStatusInstruktur(
                     instruktur = homeUiState.instruktur,
                     modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
-                        onDetailClick(it.id_instruktur.toString()) // Mengonversi id_instruktur menjadi String
+                        onDetailClick(it.id_instruktur.toInt()) // Mengonversi id_instruktur menjadi String
                     },
                     onDeleteClick = {
                         onDeleteClick(it)

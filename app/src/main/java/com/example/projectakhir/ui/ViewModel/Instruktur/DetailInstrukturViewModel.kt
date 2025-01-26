@@ -4,7 +4,6 @@ package com.example.projectakhir.ui.ViewModel.Instruktur
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pam11.ui.ViewModel.InsertInstrukturUiEvent
 import com.example.projectakhir.Repository.InstrukturRepository
 import com.example.projectakhir.model.Instruktur
 import com.example.projectakhir.ui.View.Instruktur.DestinasiDetailInstruktur

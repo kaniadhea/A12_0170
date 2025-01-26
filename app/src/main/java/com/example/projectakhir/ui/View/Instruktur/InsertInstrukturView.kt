@@ -22,9 +22,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pam11.ui.ViewModel.InsertInstrukturUiEvent
-import com.example.pam11.ui.ViewModel.InsertInstrukturUiState
-import com.example.pam11.ui.ViewModel.InsertInstrukturViewModel
+import com.example.projectakhir.ui.ViewModel.Instruktur.InsertInstrukturUiEvent
+import com.example.projectakhir.ui.ViewModel.Instruktur.InsertInstrukturUiState
+import com.example.projectakhir.ui.ViewModel.Instruktur.InsertInstrukturViewModel
 import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
 import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
@@ -58,11 +58,11 @@ fun EntryInstruScreen(
         }
     ) { innerPadding ->
         EntryBodyInstru(
-            insertInstrukturUiState = viewModel.InstruuiState,
-            onInstruValueChange = viewModel::updateInsertInstrukturState,
+            insertInstrukturUiState = viewModel.instruUiState,
+            onInstruValueChange = viewModel::updateInsertInstruState,
             onSaveClick = {
                 coroutineScope.launch {
-                    viewModel.insertInst()
+                    viewModel.insertInstru()
                     navigateBack()
                 }
             },
