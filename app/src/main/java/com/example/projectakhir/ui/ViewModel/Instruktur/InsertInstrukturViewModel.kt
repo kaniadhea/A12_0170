@@ -11,11 +11,11 @@ import com.example.projectakhir.model.Instruktur
 import kotlinx.coroutines.launch
 
 
-class InsertInstrukturViewModel(private val instru: InstrukturRepository): ViewModel() {
+class InsertInstrukturViewModel(private val instru: InstrukturRepository) : ViewModel() {
     var InstruuiState by mutableStateOf(InsertInstrukturUiState())
         private set
 
-    fun updateInsertInstrukturState(insertUiEvent: InsertInstrukturUiEvent){
+    fun updateInsertInstrukturState(insertUiEvent: InsertInstrukturUiEvent) {
         InstruuiState = InsertInstrukturUiState(insertInstrukturUiEvent = insertUiEvent)
     }
 
@@ -23,7 +23,7 @@ class InsertInstrukturViewModel(private val instru: InstrukturRepository): ViewM
         viewModelScope.launch {
             try {
                 instru.insertInstruktur(InstruuiState.insertInstrukturUiEvent.toInstru())
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
@@ -35,12 +35,12 @@ data class InsertInstrukturUiState(
     val insertInstrukturUiEvent: InsertInstrukturUiEvent = InsertInstrukturUiEvent()
 )
 
-data class InsertInstrukturUiEvent (
-    val id_instruktur: String="",
-    val nama_instruktur: String="",
-    val email: String="",
-    val nomor_telepon: String="",
-    val deskripsi:String=""
+data class InsertInstrukturUiEvent(
+    val id_instruktur: Int = 0, // Ganti menjadi Int
+    val nama_instruktur: String = "",
+    val email: String = "",
+    val nomor_telepon: String = "",
+    val deskripsi: String = ""
 )
 
 fun InsertInstrukturUiEvent.toInstru(): Instruktur = Instruktur(

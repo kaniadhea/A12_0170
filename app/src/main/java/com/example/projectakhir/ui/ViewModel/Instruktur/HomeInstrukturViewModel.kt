@@ -21,37 +21,35 @@ class HomeInstrukturViewModel(private val instru: InstrukturRepository) : ViewMo
     var instruUiState: HomeInstrukturUiState by mutableStateOf(HomeInstrukturUiState.Loading)
         private set
 
-
     init {
         getIntru()
     }
 
-
     fun getIntru() {
         viewModelScope.launch {
             instruUiState = HomeInstrukturUiState.Loading
-            instruUiState = try {
-                HomeInstrukturUiState.Success(instru.getInstruktur())
+            try {
+                // Mendapatkan data AllInstrukturRespons dan mengubahnya menjadi List<Instruktur>
+                val response = instru.getAllInstruktur()
+                // Misalkan `response.data` adalah list instruktur yang kita butuhkan
+                instruUiState = HomeInstrukturUiState.Success(response.data) // Pastikan `data` adalah List<Instruktur>
             } catch (e: IOException) {
-                HomeInstrukturUiState.Error
+                instruUiState = HomeInstrukturUiState.Error
             } catch (e: HttpException) {
-                HomeInstrukturUiState.Error
+                instruUiState = HomeInstrukturUiState.Error
             }
         }
     }
 
-    fun deleteInstru(id_instruktur: String) {
+    fun deleteInstru(id_instruktur: Int) {
         viewModelScope.launch {
             try {
                 instru.deleteInstruktur(id_instruktur)
             } catch (e: IOException) {
-                HomeInstrukturUiState.Error
+                instruUiState = HomeInstrukturUiState.Error
             } catch (e: HttpException) {
-                HomeInstrukturUiState.Error
+                instruUiState = HomeInstrukturUiState.Error
             }
         }
     }
-
 }
-
-

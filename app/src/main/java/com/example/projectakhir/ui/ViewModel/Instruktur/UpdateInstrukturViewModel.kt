@@ -1,6 +1,5 @@
 package com.example.projectakhir.ui.ViewModel.Instruktur
 
-
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -18,18 +17,20 @@ class UpdateInstrukturViewModel (
     private val instru: InstrukturRepository
 ) : ViewModel(){
 
-    val id_instruktur: String = checkNotNull(savedStateHandle[DestinasiDetailKursus.ID_Kursus])
+    // Ubah id_instruktur menjadi Int
+    val id_instruktur: Int = checkNotNull(savedStateHandle[DestinasiDetailKursus.ID_Kursus]) // Pastikan ini merupakan ID yang dikirim dalam bentuk Int
 
     var uiState = mutableStateOf(InsertInstrukturUiState())
         private set
+
     init {
         ambilInstruktur()
     }
 
-
     private fun ambilInstruktur() {
         viewModelScope.launch {
             try {
+                // Perhatikan bahwa kita mengubah id_instruktur menjadi Int
                 val instruktur = instru.getInstrukturbyid_instruktur(id_instruktur)
                 instruktur?.let {
                     uiState.value = it.toInsertInstrukturUIEvent()
@@ -39,12 +40,12 @@ class UpdateInstrukturViewModel (
             }
         }
     }
-    fun updateInstru(id_instruktur: String, instruktur: Instruktur) {
+
+    fun updateInstru(id_instruktur: Int, instruktur: Instruktur) { // Perubahan di sini: id_instruktur menjadi Int
         viewModelScope.launch {
             try {
-                instru.updateInstruktur(id_instruktur, instruktur )
-
-
+                // Pastikan updateInstruktur menerima id_instruktur dalam tipe Int
+                instru.updateInstruktur(id_instruktur, instruktur)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -58,4 +59,3 @@ class UpdateInstrukturViewModel (
 
 fun Instruktur.toInsertInstrukturUIEvent(): InsertInstrukturUiState = InsertInstrukturUiState(
     insertInstrukturUiEvent = this.toDetailIntrukturUiEvent())
-

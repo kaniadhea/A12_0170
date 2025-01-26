@@ -23,7 +23,7 @@ class DetailInstrukturViewModel(
     private val instru: InstrukturRepository
 ) : ViewModel() {
 
-    private val _id_instruktur: String = checkNotNull(savedStateHandle[DestinasiDetailInstruktur.ID_Instru])
+    private val _id_instruktur: Int = checkNotNull(savedStateHandle[DestinasiDetailInstruktur.ID_Instru])
 
 
     private val _detailInstrukturUiState = MutableStateFlow<DetailInstruUiState>(DetailInstruUiState.Loading)

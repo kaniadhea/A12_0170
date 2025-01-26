@@ -36,37 +36,40 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
 import com.example.projectakhir.R
 import com.example.projectakhir.model.Instruktur
-import com.example.projectakhir.ui.ViewModel.Instruktur.HomeUiState
-import com.example.projectakhir.ui.ViewModel.Instruktur.HomeViewModel
+import com.example.projectakhir.ui.ViewModel.Instruktur.HomeInstrukturUiState
+import com.example.projectakhir.ui.ViewModel.Instruktur.HomeInstrukturViewModel
+import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
+import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 
-object DestinasiHome:DestinasiNavigasi{
+object DestinasiHomeInstruktur: DestinasiNavigasi {
     override val route ="home"
-    override val titleRes = "Home Mhs"
+    override val titleRes = "Home Instruktur"
 }
 
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun HomeScreenInstruktur(
     navigateTolItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
-    viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: HomeInstrukturViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold (
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiHome.titleRes,
+                title = DestinasiHomeInstruktur.titleRes,
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
-                    viewModel.getMhs()
+                    viewModel.getIntru()
                 }
             )
         },
@@ -76,54 +79,55 @@ fun HomeScreen(
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(18.dp)
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Mahasiswa")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Instruktur")
             }
         },
-    ) { innerPadding->
-        HomeStatus(
-            homeUiState = viewModel.mhsUiState,
-            retryAction = {viewModel.getMhs()}, modifier = Modifier.padding(innerPadding),
-            onDetailClick = onDetailClick,onDeleteClick = {
-                viewModel.deleteMhs(it.nim)
-                viewModel.getMhs()
+    ) { innerPadding ->
+        HomeStatusInstruktur(
+            homeUiState = viewModel.instruUiState,
+            retryAction = { viewModel.getIntru() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,
+            onDeleteClick = {
+                viewModel.deleteInstru(it.id_instruktur)
+                viewModel.getIntru()
             }
         )
     }
-
 }
 
-
 @Composable
-fun HomeStatus(
-    homeUiState: HomeUiState,
+fun HomeStatusInstruktur(
+    homeUiState: HomeInstrukturUiState,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     onDeleteClick: (Instruktur) -> Unit = {},
     onDetailClick: (String) -> Unit
 ){
     when (homeUiState){
-        is HomeUiState.Loading-> OnLoading(modifier = modifier.fillMaxSize())
+        is HomeInstrukturUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
-
-        is HomeUiState.Success ->
-            if(homeUiState.instruktur.isEmpty()){
-                return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        is HomeInstrukturUiState.Success ->
+            if (homeUiState.instruktur.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = "Tidak ada data kontak")
                 }
-            }else{
+            } else {
                 InstruLayout(
-                    instruktur = homeUiState.instruktur,modifier = modifier.fillMaxWidth(),
+                    instruktur = homeUiState.instruktur,
+                    modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
-                        onDetailClick(it.id_instruktur)
+                        onDetailClick(it.id_instruktur.toString()) // Mengonversi id_instruktur menjadi String
                     },
-                    onDeleteClick={
+                    onDeleteClick = {
                         onDeleteClick(it)
                     }
                 )
             }
-        is HomeUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
+        is HomeInstrukturUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
     }
 }
+
 
 
 @Composable
@@ -190,7 +194,7 @@ fun InstruLayout(
 fun InstruCard(
     instruktur: Instruktur,
     modifier: Modifier = Modifier,
-    onDeleteClick:(Instruktur)-> Unit = {}
+    onDeleteClick: (Instruktur) -> Unit = {}
 ){
     Card(
         modifier = modifier,
@@ -210,20 +214,19 @@ fun InstruCard(
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = {onDeleteClick(instruktur)}) {
+                IconButton(onClick = { onDeleteClick(instruktur) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
                     )
                 }
 
-
+                // Menggunakan toString() untuk mengonversi id_instruktur menjadi String
                 Text(
-                    text = instruktur.id_instruktur,
+                    text = instruktur.id_instruktur.toString(),  // Mengonversi ke String
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-
 
             Text(
                 text = instruktur.email,
@@ -238,6 +241,5 @@ fun InstruCard(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
     }
 }

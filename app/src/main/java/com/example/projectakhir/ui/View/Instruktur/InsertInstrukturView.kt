@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -13,55 +14,55 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pam11.ui.ViewModel.InsertUiEvent
-import com.example.pam11.ui.ViewModel.InsertUiState
-import com.example.pam11.ui.ViewModel.InsertViewModel
-import com.example.pam11.ui.ViewModel.PenyediaViewModel
-import com.example.pam11.ui.navigasi.CostumeTopAppBar
-import com.example.pam11.ui.navigasi.DestinasiNavigasi
+import com.example.pam11.ui.ViewModel.InsertInstrukturUiEvent
+import com.example.pam11.ui.ViewModel.InsertInstrukturUiState
+import com.example.pam11.ui.ViewModel.InsertInstrukturViewModel
+import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
+import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
+import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
+
 import kotlinx.coroutines.launch
 
 
-object DestinasiEntry : DestinasiNavigasi{
+object DestinasiEntryInstruktur : DestinasiNavigasi {
     override val route = "item_entry"
-    override val titleRes = "Entry Mhs"
+    override val titleRes = "Entry Instru"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EntryMhsScreen(
+fun EntryInstruScreen(
     navigateBack:()->Unit,
     modifier: Modifier = Modifier,
-    viewModel: InsertViewModel = viewModel(factory = PenyediaViewModel.Factory)
-
+    viewModel: InsertInstrukturViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Scaffold (
+    Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiEntry.titleRes,
+                title = DestinasiEntryInstruktur.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 navigateUp = navigateBack
             )
         }
     ) { innerPadding ->
-        EntryBody(
-            insertUiState = viewModel.uiState,
-            onSiswaValueChange = viewModel::updateInsertMhsState,
+        EntryBodyInstru(
+            insertInstrukturUiState = viewModel.InstruuiState,
+            onInstruValueChange = viewModel::updateInsertInstrukturState,
             onSaveClick = {
                 coroutineScope.launch {
-                    viewModel.insertMhs()
+                    viewModel.insertInst()
                     navigateBack()
                 }
             },
@@ -73,10 +74,11 @@ fun EntryMhsScreen(
     }
 }
 
+
 @Composable
-fun EntryBody(
-    insertUiState: InsertUiState,
-    onSiswaValueChange:(InsertUiEvent)->Unit,
+fun EntryBodyInstru(
+    insertInstrukturUiState: InsertInstrukturUiState,
+    onInstruValueChange:(InsertInstrukturUiEvent)->Unit,
     onSaveClick:()-> Unit,
     modifier: Modifier = Modifier
 ){
@@ -85,8 +87,8 @@ fun EntryBody(
         modifier = modifier.padding(12.dp)
     ) {
         FormInput(
-            insertUiEvent = insertUiState.insertUiEvent,
-            onValueChange = onSiswaValueChange,
+            insertInstrukturUiEvent = insertInstrukturUiState.insertInstrukturUiEvent,
+            onValueChange = onInstruValueChange,
             modifier = Modifier.fillMaxWidth()
         )
         Button(
@@ -97,8 +99,8 @@ fun EntryBody(
             Text(text = "Simpan")
         }
     }
-
 }
+
 
 
 
@@ -106,9 +108,9 @@ fun EntryBody(
 @Composable
 
 fun FormInput(
-    insertUiEvent: InsertUiEvent,
+    insertInstrukturUiEvent: InsertInstrukturUiEvent,
     modifier: Modifier = Modifier,
-    onValueChange:(InsertUiEvent)->Unit = {},
+    onValueChange:(InsertInstrukturUiEvent)->Unit = {},
     enabled: Boolean = true
 ){
     Column (
@@ -116,75 +118,66 @@ fun FormInput(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            value = insertUiEvent.nama,
-            onValueChange = {onValueChange(insertUiEvent.copy(nama = it))},
+            value = insertInstrukturUiEvent.nama_instruktur,
+            onValueChange = { onValueChange(insertInstrukturUiEvent.copy(nama_instruktur = it)) },
             label = { Text("Nama") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
+
+        // Menggunakan KeyboardType.Number dan mengonversi nilai ke Int
         OutlinedTextField(
-            value = insertUiEvent.nim,
-            onValueChange = {onValueChange(insertUiEvent.copy(nim = it))},
-            label = { Text("NIM") },
+            value = insertInstrukturUiEvent.id_instruktur.toString(),
+            onValueChange = {
+                val newId = it.toIntOrNull() ?: 0
+                onValueChange(insertInstrukturUiEvent.copy(id_instruktur = newId))
+            },
+            label = { Text("ID Instruktur") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+        )
+
+        OutlinedTextField(
+            value = insertInstrukturUiEvent.deskripsi,
+            onValueChange = { onValueChange(insertInstrukturUiEvent.copy(deskripsi = it)) },
+            label = { Text("Deskripsi") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
-
         OutlinedTextField(
-            value = insertUiEvent.jenisKelamin,
-            onValueChange = {onValueChange(insertUiEvent.copy(jenisKelamin = it))},
-            label = { Text("Jenis Kelamin") },
+            value = insertInstrukturUiEvent.email,
+            onValueChange = { onValueChange(insertInstrukturUiEvent.copy(email = it)) },
+            label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
-
         OutlinedTextField(
-            value = insertUiEvent.alamat,
-            onValueChange = {onValueChange(insertUiEvent.copy(alamat = it))},
-            label = { Text("Alamat") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-
-
-        OutlinedTextField(
-            value = insertUiEvent.kelas,
-            onValueChange = {onValueChange(insertUiEvent.copy(kelas = it))},
+            value = insertInstrukturUiEvent.nomor_telepon,
+            onValueChange = { onValueChange(insertInstrukturUiEvent.copy(nomor_telepon = it)) },
             label = { Text("Kelas") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
-
-        OutlinedTextField(
-            value = insertUiEvent.angkatan,
-            onValueChange = {onValueChange(insertUiEvent.copy(angkatan = it))},
-            label = { Text("Angkatan") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-        if (enabled){
+        if (enabled) {
             Text(
                 text = "Isi Semua Data!",
                 modifier = Modifier.padding(12.dp)
             )
         }
 
-
         Divider(
             thickness = 8.dp,
             modifier = Modifier.padding(12.dp)
         )
-
-
     }
-
 }
+
