@@ -1,5 +1,6 @@
 package com.example.projectakhir.ui.ViewModel.Kursus
 
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,30 +31,25 @@ class HomeKursusViewModel(private val kur: KursusRepository) : ViewModel() {
     fun getKur() {
         viewModelScope.launch {
             kurUiState = HomeKursusUiState.Loading
-            try {
-                val data = kur.getKursus()
-                kurUiState = HomeKursusUiState.Success(data)
-                println("Data kursus berhasil diambil: $data")
+            kurUiState = try {
+                HomeKursusUiState.Success(kur.getAllKursus().data)
             } catch (e: IOException) {
-                println("Error IOException: ${e.message}")
-                kurUiState = HomeKursusUiState.Error
+                HomeKursusUiState.Error
             } catch (e: HttpException) {
-                println("Error HttpException: ${e.message}")
-                kurUiState = HomeKursusUiState.Error
+                HomeKursusUiState.Error
             }
         }
     }
 
 
-    fun deleteKur(id_kursus: String) {
+    fun deleteKur(id_kursus: Int) {
         viewModelScope.launch {
             try {
                 kur.deleteKursus(id_kursus)
-                getKur()
             } catch (e: IOException) {
-                kurUiState = HomeKursusUiState.Error
+                HomeKursusUiState.Error
             } catch (e: HttpException) {
-                kurUiState = HomeKursusUiState.Error
+                HomeKursusUiState.Error
             }
         }
     }

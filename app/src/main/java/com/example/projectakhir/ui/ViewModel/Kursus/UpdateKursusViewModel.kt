@@ -1,46 +1,50 @@
 package com.example.projectakhir.ui.ViewModel.Kursus
 
+
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.projectakhir.Repository.KursusRepository
 import com.example.projectakhir.model.Kursus
-import com.example.projectakhir.ui.View.Kursus.DestinasiUpdateKursus
+import com.example.projectakhir.repository.KursusRepository
+import com.example.projectakhir.ui.View.Kursus.DestinasiDetailKursus
 import kotlinx.coroutines.launch
 
 class UpdateKursusViewModel (
     savedStateHandle: SavedStateHandle,
-    private val kur: KursusRepository
+    private val kurs: KursusRepository
 ) : ViewModel(){
 
-    val id_kursus: String = checkNotNull(savedStateHandle[DestinasiUpdateKursus.ID_Kursus])
+    // Ubah id_instruktur menjadi Int
+    val id_kursus: Int = checkNotNull(savedStateHandle[DestinasiDetailKursus.ID_Kursus]) // Pastikan ini merupakan ID yang dikirim dalam bentuk Int
 
     var uiState = mutableStateOf(InsertKursusUiState())
         private set
+
     init {
         ambilKursus()
     }
 
-
     private fun ambilKursus() {
         viewModelScope.launch {
             try {
-                val kursus = kur.getKursusbyid_kursus(id_kursus)
+                // Perhatikan bahwa kita mengubah id_instruktur menjadi Int
+                val kursus = kurs.getKursusbyid_kursus(id_kursus)
                 kursus?.let {
-                    uiState.value = it.toInsertKursusUIEvent()
+                    uiState.value = it.toInsertKursusUiState()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
-    fun updateKur(id_kursus: String, kursus: Kursus) {
+
+    fun updateKurs(id_kursus: Int, kursus: Kursus) { // Perubahan di sini:  menjadi Int
         viewModelScope.launch {
             try {
-                kur.updateKursus(id_kursus, kursus)
-
-
+                // Pastikan updateInstruktur menerima id_instruktur dalam tipe Int
+                kurs.updateKursus(id_kursus, kursus)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -52,6 +56,5 @@ class UpdateKursusViewModel (
     }
 }
 
-fun Kursus.toInsertKursusUIEvent(): InsertKursusUiState = InsertKursusUiState(
-    insertKursusUiEvent = this.toDetailKursusUiEvent())
-
+fun Kursus.toInsertKursusUiState(): InsertKursusUiState = InsertKursusUiState(
+    insertKursusUiEvent = this.toDetailKursUiEvent())

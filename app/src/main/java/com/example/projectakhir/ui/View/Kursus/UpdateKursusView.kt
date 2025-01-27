@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -13,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.projectakhir.PenyediaViewModel
+import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
 import com.example.projectakhir.ui.ViewModel.Kursus.UpdateKursusViewModel
-import com.example.projectakhir.ui.ViewModel.Kursus.toKur
+import com.example.projectakhir.ui.ViewModel.Kursus.toKurs
 import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 import kotlinx.coroutines.launch
@@ -29,7 +28,8 @@ object DestinasiUpdateKursus : DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateView(
+fun UpdateKursusView(
+    onBack : () -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateKursusViewModel = viewModel(factory = PenyediaViewModel.Factory)
@@ -64,9 +64,9 @@ fun UpdateView(
                 onSaveClick = {
                     uiState.insertKursusUiEvent?.let { insertKursusUiEvent ->
                         coroutineScope.launch {
-                            viewModel.updateKur(
+                            viewModel.updateKurs(
                                 id_kursus = viewModel.id_kursus,
-                                kursus = insertKursusUiEvent.toKur()
+                                kursus = insertKursusUiEvent.toKurs()
                             )
                             navigateBack() // Navigate back after saving
                         }
