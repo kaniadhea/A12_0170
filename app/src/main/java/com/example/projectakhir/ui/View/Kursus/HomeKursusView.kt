@@ -3,7 +3,6 @@ package com.example.projectakhir.ui.View.Kursus
 import com.example.projectakhir.R
 import com.example.projectakhir.model.Kursus
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,13 +50,12 @@ object DestinasiHomeKursus: DestinasiNavigasi {
     override val titleRes = "Home Mhs"
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeKursusScreen(
     navigateTolItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
-    onDetailClick: (String) -> Unit = {},
+    onDetailClick: (String) -> Unit = {}, // Mengubah parameter menjadi String
     viewModel: HomeKursusViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -82,19 +80,19 @@ fun HomeKursusScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Mahasiswa")
             }
         },
-    ) { innerPadding->
+    ) { innerPadding ->
         HomeStatus(
             homeKursusUiState = viewModel.kurUiState,
-            retryAction = {viewModel.getKur()}, modifier = Modifier.padding(innerPadding),
-            onDetailClick = onDetailClick,onDeleteClick = {
+            retryAction = { viewModel.getKur() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,
+            onDeleteClick = {
                 viewModel.deleteKur(it.id_kursus)
                 viewModel.getKur()
             }
         )
     }
-
 }
-
 
 @Composable
 fun HomeStatus(
@@ -102,36 +100,34 @@ fun HomeStatus(
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     onDeleteClick: (Kursus) -> Unit = {},
-    onDetailClick: (String) -> Unit
+    onDetailClick: (String) -> Unit // Mengubah parameter menjadi String
 ){
-    when (homeKursusUiState){
-        is HomeKursusUiState.Loading-> OnLoading(modifier = modifier.fillMaxSize())
-
-
-        is HomeKursusUiState.Success ->
-            if(homeKursusUiState.kursus.isEmpty()){
-                return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+    when (homeKursusUiState) {
+        is HomeKursusUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+        is HomeKursusUiState.Success -> {
+            if (homeKursusUiState.kursus.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = "Tidak ada data kontak")
                 }
-            }else{
+            } else {
                 KursusLayout(
-                    kursus = homeKursusUiState.kursus,modifier = modifier.fillMaxWidth(),
+                    kursus = homeKursusUiState.kursus,
+                    modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
-                        onDetailClick(it.id_kursus)
+                        onDetailClick(it.id_kursus.toString()) // Mengubah ID menjadi String
                     },
-                    onDeleteClick={
+                    onDeleteClick = {
                         onDeleteClick(it)
                     }
                 )
             }
+        }
         is HomeKursusUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
     }
 }
 
-
-
 @Composable
-fun OnLoading(modifier: Modifier = Modifier){
+fun OnLoading(modifier: Modifier = Modifier) {
     Image(
         modifier = modifier.size(200.dp),
         painter = painterResource(R.drawable.gambarloading),
@@ -153,7 +149,6 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
         Button(onClick = retryAction) {
             Text(stringResource(R.string.retry))
         }
-
     }
 }
 
@@ -161,28 +156,25 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 fun KursusLayout(
     kursus: List<Kursus>,
     modifier: Modifier = Modifier,
-    onDetailClick:(Kursus) -> Unit,
+    onDetailClick: (Kursus) -> Unit,
     onDeleteClick: (Kursus) -> Unit = {}
-){
+) {
     LazyColumn (
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    ){
-        items(kursus){ kursus ->
+    ) {
+        items(kursus) { kursus ->
             KursusCard(
                 kursus = kursus,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onDetailClick(kursus) },
-                onDeleteClick ={
+                onDeleteClick = {
                     onDeleteClick(kursus)
                 }
             )
-
-
         }
-
     }
 }
 
@@ -190,8 +182,8 @@ fun KursusLayout(
 fun KursusCard(
     kursus: Kursus,
     modifier: Modifier = Modifier,
-    onDeleteClick:(Kursus)-> Unit = {}
-){
+    onDeleteClick: (Kursus) -> Unit = {}
+) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -210,27 +202,22 @@ fun KursusCard(
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = {onDeleteClick(kursus)}) {
+                IconButton(onClick = { onDeleteClick(kursus) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
                     )
                 }
 
-
+                // Konversi id_kursus dari Int ke String untuk ditampilkan
                 Text(
-                    text = kursus.id_kursus,
+                    text = "ID: ${kursus.id_kursus}", // Mengonversi ke String menggunakan template
                     style = MaterialTheme.typography.titleMedium
                 )
             }
 
-
             Text(
-                text = kursus.id_kursus,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = kursus.id_instruktur,
+                text = "Instruktur ID: ${kursus.id_instruktur}", // Mengonversi id_instruktur ke String
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
@@ -242,10 +229,9 @@ fun KursusCard(
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = kursus.harga,
+                text = "Harga: ${kursus.harga}", // Harga tetap String
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
     }
 }

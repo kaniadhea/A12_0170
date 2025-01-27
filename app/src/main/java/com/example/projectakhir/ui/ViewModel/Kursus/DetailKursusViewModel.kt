@@ -1,6 +1,5 @@
 package com.example.projectakhir.ui.ViewModel.Kursus
 
-
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,17 +21,16 @@ class DetailKursusViewModel(
     private val kur: KursusRepository
 ) : ViewModel() {
 
-    private val _id_kursus : String = checkNotNull(savedStateHandle[DestinasiDetailKursus.ID_Kursus])
-
+    private val _id_kursus: Int = checkNotNull(savedStateHandle[DestinasiDetailKursus.ID_Kursus])
 
     private val _detailUiState = MutableStateFlow<DetailKursusUiState>(DetailKursusUiState.Loading)
     val detailKursusUiState: StateFlow<DetailKursusUiState> = _detailUiState
 
     init {
-        getDetailMahasiswa()
+        getDetailKursus()
     }
 
-    fun getDetailMahasiswa() {
+    fun getDetailKursus() {
         viewModelScope.launch {
             try {
                 _detailUiState.value = DetailKursusUiState.Loading
@@ -50,8 +48,7 @@ class DetailKursusViewModel(
     }
 }
 
-
-fun Kursus.toDetailKursusUiEvent(): InsertKursusUiEvent {
+fun Kursus.toDetailKursUiEvent(): InsertKursusUiEvent {
     return InsertKursusUiEvent(
         id_kursus = id_kursus,
         nama_kursus = nama_kursus,
