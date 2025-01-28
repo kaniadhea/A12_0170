@@ -46,7 +46,7 @@ import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 
 object DestinasiHomeInstruktur: DestinasiNavigasi {
-    override val route ="home"
+    override val route ="homeinstruktur"
     override val titleRes = "Home Instruktur"
 }
 

@@ -1,42 +1,44 @@
 package com.example.projectakhir.ui.ViewModel.Instruktur
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir.Repository.InstrukturRepository
 import com.example.projectakhir.model.Instruktur
+import com.example.projectakhir.model.Kursus
 import kotlinx.coroutines.launch
 
-class InsertInstrukturViewModel(private val instru: InstrukturRepository) : ViewModel() {
-    var instruUiState by mutableStateOf(InsertInstrukturUiState())
+
+class InsertInstrukturViewModel(private val instru: InstrukturRepository): ViewModel() {
+    var instruuiState by mutableStateOf(InsertInstrukturUiState())
         private set
 
     fun updateInsertInstruState(insertInstrukturUiEvent: InsertInstrukturUiEvent) {
-        instruUiState = InsertInstrukturUiState(insertInstrukturUiEvent = insertInstrukturUiEvent)
+        instruuiState = InsertInstrukturUiState(insertInstrukturUiEvent = insertInstrukturUiEvent)
     }
 
-    fun insertInstru() { // Menghapus "suspend" karena sudah dipanggil di dalam "viewModelScope.launch"
+    suspend fun insertInstru() {
         viewModelScope.launch {
             try {
-                val instruktur = instruUiState.insertInstrukturUiEvent.toInstru()
-                instru.insertInstruktur(instruktur)
-                println("Insert successful: $instruktur") // Debugging log
+                Log.d("InsertInstruktur", "Inserting data: ${instruuiState.insertInstrukturUiEvent}")
+                instru.insertInstruktur(instruuiState.insertInstrukturUiEvent.toInstru())
             } catch (e: Exception) {
-                e.printStackTrace()
-                println("Error during insert: ${e.message}") // Error handling log
+                Log.e("InsertInstruktur", "Error inserting data", e)
             }
         }
     }
 }
 
-// Data class untuk menyimpan UI state
+
+
 data class InsertInstrukturUiState(
     val insertInstrukturUiEvent: InsertInstrukturUiEvent = InsertInstrukturUiEvent()
 )
 
-// Data class untuk event UI
 data class InsertInstrukturUiEvent(
     val id_instruktur: Int = 0,
     val nama_instruktur: String = "",
@@ -45,22 +47,11 @@ data class InsertInstrukturUiEvent(
     val deskripsi: String = ""
 )
 
-// Extension function untuk konversi InsertInstrukturUiEvent ke Instruktur
+fun InsertInstrukturUiEvent.isValid(): Boolean {
+    return nama_instruktur.isNotBlank() && email.isNotBlank() && email.contains("@") && nomor_telepon.isNotBlank()
+}
+
 fun InsertInstrukturUiEvent.toInstru(): Instruktur = Instruktur(
-    id_instruktur = id_instruktur,
-    nama_instruktur = nama_instruktur,
-    email = email,
-    nomor_telepon = nomor_telepon,
-    deskripsi = deskripsi
-)
-
-// Extension function untuk konversi Instruktur ke InsertInstrukturUiState
-fun Instruktur.toUiStateInstru(): InsertInstrukturUiState = InsertInstrukturUiState(
-    insertInstrukturUiEvent = toInsertInstrukturUiEvent()
-)
-
-// Extension function untuk konversi Instruktur ke InsertInstrukturUiEvent
-fun Instruktur.toInsertInstrukturUiEvent(): InsertInstrukturUiEvent = InsertInstrukturUiEvent(
     id_instruktur = id_instruktur,
     nama_instruktur = nama_instruktur,
     email = email,

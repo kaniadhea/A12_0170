@@ -1,7 +1,7 @@
 package com.example.projectakhir.service
 
 
-import com.example.projectakhir.model.AllInstrukturResponse
+import com.example.projectakhir.model.AllInstrukturRespons
 import com.example.projectakhir.model.Instruktur
 import com.example.projectakhir.model.InstrukturDetailRespons
 import retrofit2.Response
@@ -22,21 +22,21 @@ interface InstrukturService {
     )
 
     //@GET("bacamahasiswa.php")
-    @GET (".")
-    suspend fun getAllInstruktur():AllInstrukturResponse
+    @GET ("instruktur")
+    suspend fun getAllInstruktur():AllInstrukturRespons
 
     //@GET("baca1mahasiswa.php/{id}")
-    @GET("{id_instruktur}")
-    suspend fun getInstrukturbyid_instruktur(@Path("id_instruktur") id_instruktur:String): InstrukturDetailRespons
+    @GET("instruktur/{id_instruktur}")
+    suspend fun getInstrukturbyid_instruktur(@Path("id_instruktur") id_instruktur:Int): InstrukturDetailRespons
 
-    @POST("store")
+    @POST("instruktur/store")
     suspend fun insertInstruktur(@Body instruktur: Instruktur)
 
     //@PUT("editmahasiswa.php/{id}")
-    @PUT("{id_instruktur}")
-    suspend fun updateInstruktur(@Path("id_instruktur")id_instruktur: String, @Body instruktur: Instruktur)
+    @PUT("instruktur/{id_instruktur}")
+    suspend fun updateInstruktur(@Path("id_instruktur")id_instruktur: Int, @Body instruktur: Instruktur)
 
     //@DELETE("deletemahasiswa.php/{id}")
-    @DELETE("{id_instruktur}")
-    suspend fun deleteInstruktur(@Path("id_instruktur")id_instruktur: String): Response<Void>
+    @DELETE("instruktur/{id_instruktur}")
+    suspend fun deleteInstruktur(@Path("id_instruktur")id_instruktur: Int): Response<Void>
 }
