@@ -46,8 +46,8 @@ import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 object DestinasiHomeKursus: DestinasiNavigasi {
-    override val route ="home"
-    override val titleRes = "Home Mhs"
+    override val route ="homekursus"
+    override val titleRes = "Home Kursus"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -47,8 +47,8 @@ import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 
 object DestinasiHomePendaftaran: DestinasiNavigasi {
-    override val route ="home"
-    override val titleRes = "Home Mhs"
+    override val route ="homependaftaran"
+    override val titleRes = "Home Pendaftaran"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

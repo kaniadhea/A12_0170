@@ -11,11 +11,12 @@ import com.example.projectakhir.Repository.PendaftaranRepository
 import kotlinx.coroutines.launch
 
 
-class InsertPendaftaranViewModel(private val pndftrn: PendaftaranRepository): ViewModel() {
+
+class InsertPendaftaranViewModel(private val pndftrn: PendaftaranRepository) : ViewModel() {
     var uiState by mutableStateOf(InsertPendaftaranUiState())
         private set
 
-    fun updateInsertPndftrnState(insertPendftaranUiEvent: InsertPendaftranUiEvent){
+    fun updateInsertPndftrnState(insertPendftaranUiEvent: InsertPendaftranUiEvent) {
         uiState = InsertPendaftaranUiState(insertPendftaranUiEvent = insertPendftaranUiEvent)
     }
 
@@ -23,24 +24,22 @@ class InsertPendaftaranViewModel(private val pndftrn: PendaftaranRepository): Vi
         viewModelScope.launch {
             try {
                 pndftrn.insertPendaftaran(uiState.insertPendftaranUiEvent.toPndftran())
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 }
 
-
 data class InsertPendaftaranUiState(
     val insertPendftaranUiEvent: InsertPendaftranUiEvent = InsertPendaftranUiEvent()
 )
 
 data class InsertPendaftranUiEvent(
-
-    val id_pendaftaran: String = "",
-    val id_kursus: String = "",
-    val id_siswa: String = "",
-    val tanggal_pendaftaran: String = ""
+    val id_pendaftaran: Int = 0, // Mengubah ke tipe data Int
+    val id_kursus: Int = 0, // Mengubah ke tipe data Int
+    val id_siswa: Int = 0, // Mengubah ke tipe data Int
+    val tanggal_pendaftaran: String = "" // Tetap String
 )
 
 fun InsertPendaftranUiEvent.toPndftran(): Pendaftaran = Pendaftaran(

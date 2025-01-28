@@ -1,4 +1,5 @@
-package com.example.projectakhir.ui.View.Kursus
+package com.example.projectakhir.ui.View.Pendaftaran
+
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,38 +14,34 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.projectakhir.ui.DropDownKursus
+import com.example.projectakhir.ui.ViewModel.Pendaftaran.InsertPendaftaranUiState
+import com.example.projectakhir.ui.ViewModel.Pendaftaran.InsertPendaftaranViewModel
+import com.example.projectakhir.ui.ViewModel.Pendaftaran.InsertPendaftranUiEvent
 import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
-import com.example.projectakhir.ui.ViewModel.Kursus.InsertKursusUiEvent
-import com.example.projectakhir.ui.ViewModel.Kursus.InsertKursusUiState
-import com.example.projectakhir.ui.ViewModel.Kursus.InsertKursusViewModel
 import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 import kotlinx.coroutines.launch
 
 
-object DestinasiEntryKursus : DestinasiNavigasi {
-    override val route = "item_entry_kursus"
-    override val titleRes = "Tambah Data Kursus"
+object DestinasiEntryPndftrn : DestinasiNavigasi {
+    override val route = "item_entry_pendaftaran"
+    override val titleRes = "Tambah Data Pendaftaran"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EntryKurScreen(
+fun EntryPndftrnScreen(
     navigateBack:()->Unit,
     modifier: Modifier = Modifier,
-    viewModel: InsertKursusViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: InsertPendaftaranViewModel = viewModel(factory = PenyediaViewModel.Factory)
 
 ){
     val coroutineScope = rememberCoroutineScope()
@@ -53,19 +50,19 @@ fun EntryKurScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiEntryKursus.titleRes,
+                title = DestinasiEntryPndftrn.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 navigateUp = navigateBack
             )
         }
     ) { innerPadding ->
-        EntryBodyKursus(
-            insertKursusUiState = viewModel.kursUiState,
-            onSiswaValueChange = viewModel::updateInsertKursState,
+        EntryBodyPndftrn(
+            insertPendaftaranUiState = viewModel.uiState,
+            onSiswaValueChange = viewModel::updateInsertPndftrnState,
             onSaveClick = {
                 coroutineScope.launch {
-                    viewModel.insertKurs()
+                    viewModel.insertPndftrn()
                     navigateBack()
                 }
             },
@@ -78,9 +75,9 @@ fun EntryKurScreen(
 }
 
 @Composable
-fun EntryBodyKursus(
-    insertKursusUiState: InsertKursusUiState,
-    onSiswaValueChange:(InsertKursusUiEvent)->Unit,
+fun EntryBodyPndftrn(
+    insertPendaftaranUiState: InsertPendaftaranUiState,
+    onSiswaValueChange:(InsertPendaftranUiEvent)->Unit,
     onSaveClick:()-> Unit,
     modifier: Modifier = Modifier
 ){
@@ -88,8 +85,8 @@ fun EntryBodyKursus(
         verticalArrangement = Arrangement.spacedBy(18.dp),
         modifier = modifier.padding(12.dp)
     ) {
-        FormInput(
-            insertKursusUiEvent = insertKursusUiState.insertKursusUiEvent,
+        FormInputPndftrn(
+            insertUiEvent = insertPendaftaranUiState.insertPendftaranUiEvent,
             onValueChange = onSiswaValueChange,
             modifier = Modifier.fillMaxWidth()
         )
@@ -108,72 +105,60 @@ fun EntryBodyKursus(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormInput(
-    insertKursusUiEvent: InsertKursusUiEvent,
+fun FormInputPndftrn(
+    insertUiEvent: InsertPendaftranUiEvent,
     modifier: Modifier = Modifier,
-    onValueChange: (InsertKursusUiEvent) -> Unit = {},
+    onValueChange: (InsertPendaftranUiEvent) -> Unit = {},
     enabled: Boolean = true
 ) {
-    var selectedInstrukturId by remember { mutableStateOf<Int?>(null) }
-    val instrukturID = listOf(1, 2, 3, 4, 5) // Contoh ID
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        // ID Pendaftaran
         OutlinedTextField(
-            value = insertKursusUiEvent.nama_kursus,
-            onValueChange = { onValueChange(insertKursusUiEvent.copy(nama_kursus = it)) },
-            label = { Text("Nama") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-        OutlinedTextField(
-            value = insertKursusUiEvent.id_kursus.toString(), // Konversi Int ke String
+            value = insertUiEvent.id_pendaftaran.toString(), // Convert Int to String
             onValueChange = {
-                val newValue = it.toIntOrNull() ?: 0 // Konversi kembali ke Int, default 0 jika kosong
-                onValueChange(insertKursusUiEvent.copy(id_kursus = newValue))
+                val idPendaftaran = it.toIntOrNull() ?: 0 // Convert back to Int
+                onValueChange(insertUiEvent.copy(id_pendaftaran = idPendaftaran))
             },
-            label = { Text("Id Kursus") },
+            label = { Text("ID_pendaftaran") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
+        // ID Siswa
         OutlinedTextField(
-            value = insertKursusUiEvent.harga,
-            onValueChange = { onValueChange(insertKursusUiEvent.copy(harga = it)) },
-            label = { Text("Harga") },
+            value = insertUiEvent.id_siswa.toString(), // Convert Int to String
+            onValueChange = {
+                val idSiswa = it.toIntOrNull() ?: 0 // Convert back to Int
+                onValueChange(insertUiEvent.copy(id_siswa = idSiswa))
+            },
+            label = { Text("ID_Siswa") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
+        // ID Kursus
         OutlinedTextField(
-            value = insertKursusUiEvent.deskripsi,
-            onValueChange = { onValueChange(insertKursusUiEvent.copy(deskripsi = it)) },
-            label = { Text("Deskripsi") },
+            value = insertUiEvent.id_kursus.toString(), // Convert Int to String
+            onValueChange = {
+                val idKursus = it.toIntOrNull() ?: 0 // Convert back to Int
+                onValueChange(insertUiEvent.copy(id_kursus = idKursus))
+            },
+            label = { Text("ID_Kursus") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
+        // Tanggal Pendaftaran
         OutlinedTextField(
-            value = insertKursusUiEvent.kategori,
-            onValueChange = { onValueChange(insertKursusUiEvent.copy(kategori = it)) },
-            label = { Text("Kategori") },
+            value = insertUiEvent.tanggal_pendaftaran,
+            onValueChange = { onValueChange(insertUiEvent.copy(tanggal_pendaftaran = it)) },
+            label = { Text("Alamat") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
-        )
-
-        // DropDownKursus untuk memilih ID Kursus
-        DropDownKursus(
-            label = "Pilih ID Instruktur",
-            options = instrukturID,
-            selectedOption = selectedInstrukturId,
-            onOptionSelected = { selected ->
-                selectedInstrukturId = selected
-                onValueChange(insertKursusUiEvent.copy(id_kursus = selected)) // Update id_kursus
-            }
         )
 
         if (enabled) {
