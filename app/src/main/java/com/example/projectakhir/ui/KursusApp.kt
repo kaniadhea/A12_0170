@@ -19,9 +19,6 @@ fun KursusApp(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-
-
-
     Scaffold (
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         // topBar = { TopAppBar(scrollBehavior = scrollBehavior) }
