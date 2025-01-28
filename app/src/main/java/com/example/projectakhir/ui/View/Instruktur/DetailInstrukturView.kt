@@ -1,44 +1,8 @@
-package com.example.projectakhir.ui.View.Instruktur
-
-import com.example.projectakhir.ui.ViewModel.Instruktur.DetailInstrukturViewModel
-import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.projectakhir.model.Instruktur
-import com.example.projectakhir.ui.ViewModel.Instruktur.DetailInstruUiState
-import com.example.projectakhir.ui.ViewModel.PenyediaViewModel
-import com.example.projectakhir.ui.navigasi.CostumeTopAppBar
 
-
-object DestinasiDetailInstruktur : DestinasiNavigasi {
-    override val route = "detail"
-    const val ID_Instru = "id_instru"
-    val routeWithArg = "$route/{$ID_Instru}"
-    override val titleRes = "Detail Mhs"
-}
+// Define a cute pink color palette
+val PinkSoft = Color(0xFFF8A1D0) // Light Pink
+val PinkDark = Color(0xFFEE76A1) // Darker Pink
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,23 +19,24 @@ fun DetailInstrukturView(
                 title = DestinasiDetailInstruktur.titleRes,
                 canNavigateBack = true,
                 navigateUp = navigateBack,
-                onRefresh = { viewModel.getDetailInstruktur() } // Trigger refresh action on refresh
+                onRefresh = { viewModel.getDetailInstruktur() }
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onEditClick(id_instruktur) },
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
+                containerColor = PinkSoft // Set FloatingActionButton color
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Mahasiswa"
+                    contentDescription = "Edit Mahasiswa",
+                    tint = Color.White
                 )
             }
         }
     ) { innerPadding ->
-        // Menggunakan nama yang benar dari ViewModel
         val detailUiState by viewModel.detailIntrukturUiState.collectAsState()
 
         BodyDetailInstruktur(
@@ -89,19 +54,19 @@ fun BodyDetailInstruktur(
     retryAction: () -> Unit = {}
 ) {
     when (detailInstruUiState) {
-        is DetailInstruUiState.Loading -> { // Perbaikan referensi class sealed
+        is DetailInstruUiState.Loading -> {
             OnLoading(modifier = modifier.fillMaxSize())
         }
-        is DetailInstruUiState.Success -> { // Perbaikan referensi class sealed
+        is DetailInstruUiState.Success -> {
             Column(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                ItemDetail(instruktur = detailInstruUiState.instruktur) // Properti Success
+                ItemDetail(instruktur = detailInstruUiState.instruktur)
             }
         }
-        is DetailInstruUiState.Error -> { // Perbaikan referensi class sealed
+        is DetailInstruUiState.Error -> {
             OnError(
                 retryAction = retryAction,
                 modifier = modifier.fillMaxSize()
@@ -113,22 +78,21 @@ fun BodyDetailInstruktur(
     }
 }
 
-
 @Composable
 fun ItemDetail(
     instruktur: Instruktur
-){
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            containerColor = PinkSoft, // Set pink background color for the card
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             ComponentDetail(judul = "Nama Instruktur", isinya = instruktur.nama_instruktur)
             Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetail(judul = "ID Instruktur", isinya = instruktur.id_instruktur.toString()) // Mengubah ke String
+            ComponentDetail(judul = "ID Instruktur", isinya = instruktur.id_instruktur.toString())
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetail(judul = "Email", isinya = instruktur.email)
             Spacer(modifier = Modifier.padding(4.dp))
@@ -138,9 +102,6 @@ fun ItemDetail(
         }
     }
 }
-
-
-
 
 @Composable
 fun ComponentDetail(
@@ -155,7 +116,7 @@ fun ComponentDetail(
             text = "$judul :",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Gray
+            color = PinkDark // Set pink color for the title text
         )
         Text(
             text = isinya,
