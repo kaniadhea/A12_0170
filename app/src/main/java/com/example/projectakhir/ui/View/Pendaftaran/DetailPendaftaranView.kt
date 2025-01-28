@@ -35,7 +35,7 @@ import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 
 object DestinasiDetailPendaftran : DestinasiNavigasi {
-    override val route = "detail"
+    override val route = "detailpendaftaran"
     const val ID_Pendaftaran = "id_pendaftaran"
     val routeWithArg = "$route/{$ID_Pendaftaran}"
     override val titleRes = "Detail Pndftrn"
