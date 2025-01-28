@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 object DestinasiUpdateSiswa : DestinasiNavigasi {
     override val route = "update"
-    const val ID_Siswa = "nim"
+    const val ID_Siswa = "id_siswa"
     val routesWithArg = "$route/{$ID_Siswa}"
     override val titleRes = "Update Mhs"
 }
@@ -30,6 +30,7 @@ object DestinasiUpdateSiswa : DestinasiNavigasi {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateSiswaView(
+    onBack: () -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateSiswaViewModel = viewModel(factory = PenyediaViewModel.Factory)

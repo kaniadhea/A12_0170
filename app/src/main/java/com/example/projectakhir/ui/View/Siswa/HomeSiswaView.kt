@@ -46,8 +46,8 @@ import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 
 object DestinasiHomeSiswa: DestinasiNavigasi {
-    override val route ="home"
-    override val titleRes = "Home Mhs"
+    override val route ="homeswa"
+    override val titleRes = "Home Siswa"
 }
 
 
@@ -57,7 +57,9 @@ object DestinasiHomeSiswa: DestinasiNavigasi {
 fun HomeScreenSiswa(
     navigateTolItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
-    onDetailClick: (String) -> Unit = {},
+    onDetailClick: (Int) -> Unit = {},
+    onAddSwa: () -> Unit = {},
+    onBack: () -> Unit = {},
     viewModel: HomeSiswaViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -102,7 +104,7 @@ fun HomeStatusSiswa(
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     onDeleteClick: (Siswa) -> Unit = {},
-    onDetailClick: (String) -> Unit
+    onDetailClick: (Int) -> Unit
 ){
     when (homeSiswaUiState){
         is HomeSiswaUiState.Loading-> OnLoading(modifier = modifier.fillMaxSize())
@@ -117,7 +119,7 @@ fun HomeStatusSiswa(
                 SwaLayout(
                     siswa = homeSiswaUiState.siswa,modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
-                        onDetailClick(it.id_siswa.toString()) // Convert id_siswa to String
+                        onDetailClick(it.id_siswa.toInt()) // Convert id_siswa to String
                     },
                     onDeleteClick={
                         onDeleteClick(it)

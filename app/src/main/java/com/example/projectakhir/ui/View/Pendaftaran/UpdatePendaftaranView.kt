@@ -20,15 +20,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
 object DestinasiUpdatePendaftaran : DestinasiNavigasi {
-    override val route = "update"
-    const val ID_Pendaftaran = "nim"
-    val routesWithArg = "$route/{$ID_Pendaftaran}"
-    override val titleRes = "Update Mhs"
+    override val route = "updatependaftaran"
+    const val ID_Pendaftaran = "id_pendaftaran" // Menggunakan ID_Pendaftaran sebagai Int
+    val routeWithArg = "$route/{$ID_Pendaftaran}"
+    override val titleRes = "Update Pendaftaran"
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdatePendfatranView(
+    onBack: () -> Unit,
+    id_pendaftaran: Int, // id_pendaftaran sekarang bertipe Int
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdatePendaftaranViewModel = viewModel(factory = PenyediaViewModel.Factory)
