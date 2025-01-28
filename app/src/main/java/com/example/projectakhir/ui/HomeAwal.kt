@@ -1,5 +1,6 @@
 package com.example.projectakhir.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,32 +13,35 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.projectakhir.R
+import com.example.projectakhir.ui.View.Siswa.DestinasiHomeSiswa
+import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
-
-//tampilan awal aplikasi
-
-object DestinasiHome : AlamatNavigasi{
+// Tampilan awal aplikasi
+object DestinasiHomePertama : DestinasiNavigasi {
     override val route = "home"
+    override val titleRes : String
+        get() = TODO("Not yet implemented")
+
 }
 
 @Composable
 fun HomeAwalView(
-    onMk: () -> Unit,
-    onDsn: () -> Unit,
+    onKur: () -> Unit,
+    onSwa: () -> Unit,
+    onPen: () -> Unit,
+    onIns: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -47,15 +51,13 @@ fun HomeAwalView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-
         Column(
             modifier = Modifier
-                .fillMaxWidth() mmmmm
+                .fillMaxWidth()
                 .background(Color(0xFFF8A8B6))
                 .padding(vertical = 29.dp, horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logo with spacing
             Image(
                 painter = painterResource(R.drawable.umy),
                 contentDescription = "UMY Logo",
@@ -85,46 +87,59 @@ fun HomeAwalView(
             )
         }
 
-
         Spacer(modifier = Modifier.padding(32.dp))
-
 
         Button(
             onClick = {
-                onMk()
-            },
+                onKur() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFF8A8B6)
-            )
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8A8B6))
         ) {
-            Text(
-                text = "📘 Kursus",
-                color = Color.White
-            )
+            Text(text = "📘 Kursus", color = Color.White)
+        }
+
+        Spacer(modifier = Modifier.padding(2.dp))
+
+        Button(
+            onClick = { onPen() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8A8B6))
+        ) {
+            Text(text = "📘 Pendaftaran", color = Color.White)
+        }
+
+        Spacer(modifier = Modifier.padding(2.dp))
+
+        Button(
+            onClick = { onIns() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8A8B6))
+        ) {
+            Text(text = "🧑‍🏫 Instruktur", color = Color.White)
         }
 
         Spacer(modifier = Modifier.padding(2.dp))
 
         Button(
             onClick = {
-                onDsn()
+                onSwa()
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFF8A8B6)
-            )
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8A8B6))
         ) {
-            Text(
-                text = "🧑‍🏫 Instruktur",
-                color = Color.White
-            )
+            Text(text = "🧑‍🏫 Siswa", color = Color.White)
         }
     }
 }
