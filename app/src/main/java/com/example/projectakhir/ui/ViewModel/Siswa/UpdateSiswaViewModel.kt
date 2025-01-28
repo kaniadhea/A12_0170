@@ -40,8 +40,8 @@ class UpdateSiswaViewModel (
     fun updateSwa(id_siswa: String, siswa: Siswa) {
         viewModelScope.launch {
             try {
-                val idSiswaInt = id_siswa.toInt() // Convert id_siswa from String to Int
-                swa.updateSiswa(idSiswaInt, siswa) // Pass the Int to the update function
+                val id_siswa = id_siswa.toInt() // Convert id_siswa from String to Int
+                swa.updateSiswa(id_siswa, siswa) // Pass the Int to the update function
             } catch (e: NumberFormatException) {
                 e.printStackTrace()
             }

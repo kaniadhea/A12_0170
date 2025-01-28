@@ -35,10 +35,11 @@ import com.example.projectakhir.ui.navigasi.DestinasiNavigasi
 
 object DestinasiDetailSiswa : DestinasiNavigasi {
     override val route = "detail"
-    const val ID_Siswa = "nim"
+    const val ID_Siswa = "id_siswa"
     val routeWithArg = "$route/{$ID_Siswa}"
-    override val titleRes = "Detail Mhs"
+    override val titleRes = "Detail Siswa"
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +50,8 @@ fun DetailSiswaView(
     onEditClick: (Int) -> Unit = {},  // Ubah tipe parameter menjadi Int
     navigateBack:()->Unit,
 ){
+    println("Argumen id_siswa di DetailSiswaView: $id_siswa")
+    val siswa = viewModel.detailUiState
     Scaffold(
         topBar = {
             CostumeTopAppBar(
@@ -91,7 +94,7 @@ fun BodyDetail(
 ) {
     when (detailSiswaUiState) {
         is DetailSiswaUiState.Loading -> {
-            OnLoading(modifier = modifier.fillMaxSize())
+            Text("Loading data...", modifier = modifier)
         }
         is DetailSiswaUiState.Success -> {
             Column(
@@ -103,17 +106,11 @@ fun BodyDetail(
             }
         }
         is DetailSiswaUiState.Error -> {
-            OnError(
-                retryAction = retryAction,
-                modifier = modifier.fillMaxSize()
-            )
-        }
-        else -> {
-            Text("Unexpected state encountered")
+            Text("Error loading data. Silakan coba lagi.", modifier = modifier)
         }
     }
-
 }
+
 
 @Composable
 fun ItemDetailSiswa(

@@ -24,6 +24,7 @@ class DetailSiswaViewModel(
     private val _id_siswa : Int = checkNotNull(savedStateHandle[DestinasiDetailSiswa.ID_Siswa])
 
 
+
     private val _detailSiswaUiState = MutableStateFlow<DetailSiswaUiState>(DetailSiswaUiState.Loading)
     val detailUiState: StateFlow<DetailSiswaUiState> = _detailSiswaUiState
 
